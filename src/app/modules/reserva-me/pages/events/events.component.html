@@ -1,0 +1,192 @@
+<nav class="flex mb-4 ml-4" aria-label="Breadcrumb">
+  <ol class="inline-flex items-center space-x-1 md:space-x-3 rtl:space-x-reverse">
+    <li class="inline-flex items-center">
+      <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+        <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+        </svg>
+        Reservame
+      </a>
+    </li>
+    <li>
+      <div class="flex items-center">
+        <svg class="w-3 h-3 text-gray-400 mx-1 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+        </svg>
+        <a href="#" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Eventos</a>
+      </div>
+    </li>
+    <li aria-current="page">
+      <div class="flex items-center">
+        <svg class="w-3 h-3 text-gray-400 mx-1 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+        </svg>
+        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Lista de eventos</span>
+      </div>
+    </li>
+  </ol>
+</nav>
+
+<div class="flex justify-between items-center mt-12">
+  <h2 class="text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl dark:text-white">
+    Eventos
+  </h2>
+  @if (isAdmin){
+    <button
+      (click)="createEvent()"
+      class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
+      Crear Nuevo Evento
+    </button>
+  }
+</div>
+
+<div class="mx-auto ">
+  <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div class="pb-4 bg-white dark:bg-gray-900">
+        <label for="table-search" class="sr-only">Buscar</label>
+        <div class="relative mt-1">
+          <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar..." (input)="filterEvents($event.target)" autocomplete="off">
+        </div>
+      </div>
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Id
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Cliente
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Nombre
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Descripción
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Lugar
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Fecha
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Hora
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Total cupos
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Cupos disponibles
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Estado
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="noEventsFound">
+            <td colspan="9" class="px-6 py-4 text-center">No se encontraron eventos.</td>
+          </tr>
+          <tr *ngFor="let event of filteredEvents" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+              {{ event.id }}
+            </td>
+            <th class="px-6 py-4 ">
+              {{ event.client.name }}
+            </th>
+            <th class="px-6 py-4 ">
+              {{ event.name }}
+            </th>
+            <td class="px-6 py-4">
+              {{ event.description }}
+            </td>
+            <td class="px-6 py-4">
+              {{ event.location }}
+            </td>
+            <td class="px-6 py-4">
+              {{ event.date }}
+            </td>
+            <td class="px-6 py-4">
+              {{ event.hour }}
+            </td>
+            <th class="px-6 py-4 ">
+              {{ event.totalGuest }}
+            </th>
+            <td class="px-6 py-4">
+              {{ event.availableQuantity }}
+            </td>
+            <th class="px-6 py-4 ">
+              @if (event.status === 1 && !event.userAlreadyReserve) {
+                <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Disponible</span>
+              } @else if (event.status === 1 && event.userAlreadyReserve) {
+                <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Reservado</span>
+              } @else if (event.status === 0) {
+                <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Cancelado</span>
+              }
+            </th>
+            <td class="px-6 py-4">
+              @if (isAdmin){
+                <button type="button" (click)="editEvent(event.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1)"><path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path></svg>
+                </button>
+                <button type="button" (click)="deleteEvent(event.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1)"><path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path></svg>
+                </button>
+              }@else {
+                @if(!event.userAlreadyReserve && event.status === 1) {
+                  <button matTooltip="Reservar" type="button" (click)="reservationConfirmEvent(event.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                  </svg>
+                  </button>
+                }@else if(!event.userAlreadyReserve && event.status === 0) {
+                  <button type="button" class="font-medium text-gray-400 dark:text-gray-500 hover:underline" [disabled]="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                    </svg>
+                </button>                
+                }@else{
+                  <button matTooltip="Cancelar" type="button" (click)="reservationCancelEvent(event.id)" class="font-medium text-red-600 dark:text-blue-500 hover:underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                  
+                }
+              }
+              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+  <!-- Modal Component -->
+  <app-modal-events class="flex items-center justify-center"
+    [isVisible]="isModalVisible"
+    [event]="event"
+    [clients]="clients"
+    [isEditing]="isEditing"
+    (save)="saveEvent($event)"
+    (closeModal)="closeModal()">
+  </app-modal-events>
+
+  <app-modal-confirm-reservation class="flex items-center justify-center"
+    [isModalReservationVisible]="isModalReservationVisible"
+    [event]="event"
+    [isReservation]="isReservation"
+    (reserve)="reserveEvent($event)"
+    (closeModal)="closeModal()">
+  </app-modal-confirm-reservation>
+
+

@@ -1,0 +1,5 @@
+.content-collapsed {
+    margin-left: 64px; /* Ajusta el valor según el ancho de tu sidebar cuando está cerrado */
+    transition: margin-left 0.3s ease; /* Agrega transición para un efecto suave */
+  }
+  

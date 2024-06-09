@@ -1,0 +1,14 @@
+/* Estilos para ocultar el sidebar cuando está cerrado */
+.sidebar-closed {
+    width: 0;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+  }
+  
+  /* Estilos para mostrar el sidebar cuando está abierto */
+  .sidebar-opened {
+    width: 250px; /* Ancho del sidebar abierto */
+    opacity: 1;
+    transition: width 0.3s ease, opacity 0.3s ease;
+  }
+  
